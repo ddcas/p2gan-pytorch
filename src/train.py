@@ -121,7 +121,7 @@ if __name__ == '__main__':
                         help='The seed for the pseudo-random number generators')
     parser.add_argument('--learning-rate', type=float, default=0.001,
                         help='The learning rate for parameter updates')
-    parser.add_argument('--content-weight', type=float, default=0.001,
+    parser.add_argument('--content-weight', type=float, default=5e-06,
                         help='The weight of the content component of the loss')
 
     cmd_args = parser.parse_args()
