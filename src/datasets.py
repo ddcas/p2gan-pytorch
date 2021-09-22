@@ -2,7 +2,7 @@ import torch
 from torchvision.datasets import VOCDetection
 from torch.utils.data import Dataset, DataLoader, ConcatDataset
 
-from .utils.patch_permutation import patch_permutation
+from utils.patch_permutation import patch_permutation
 
 
 class StyleDataset(Dataset):
