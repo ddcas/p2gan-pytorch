@@ -12,10 +12,9 @@ class Discriminator(nn.Module):
         self.patch_size = patch_size
         self.n = n
 
+        # kernel sizes and strides must be factors of the patch size
         self.patch_factors = self._get_patch_factors()
         self.channels = self._get_channels()
-        print(self.patch_factors)
-        print(self.channels)
 
         modules = []
         for i, pf in enumerate(self.patch_factors):
