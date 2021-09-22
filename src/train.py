@@ -56,7 +56,7 @@ def main(args):
     logging.info('Set up models...')
     vgg = VGG(device).eval()
     generator = Generator().to(device).train()
-    discriminator = Discriminator().to(device).train()
+    discriminator = Discriminator(patch_size).to(device).train()
 
     logging.info('Set up optimizers...')
     optim_g = optim.RMSprop(generator.parameters(), lr=learning_rate)
@@ -67,7 +67,7 @@ def main(args):
     adv_criterion = nn.BCELoss()
 
     losses_adv, losses_content = [], []
-    # training loop
+    logging.info('Training starts!')
     for epoch in range(epochs):
         for step, (x, psi) in enumerate(
                 zip(dataloader_content, dataloader_style)):
@@ -94,8 +94,8 @@ def main(args):
 
             # monitor losses
             if step % 128 == 0:
-                print('epoch {} - step {} ::: LOSS_ADV: {} --',
-                      ' LOSS_CONTENT: {}'.format(epoch, step,
+                print('epoch {} - step {} ::: loss_adv: {} --',
+                      ' loss_content: {}'.format(epoch, step,
                                                  np.mean(losses_adv),
                                                  np.mean(losses_content)))
                 # save generated batch
