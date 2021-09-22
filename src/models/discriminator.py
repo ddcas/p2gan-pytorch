@@ -12,18 +12,20 @@ class Discriminator(nn.Module):
         self.patch_size = patch_size
         self.n = n
 
-        patch_factors = self._get_patch_factors()
-        channels = self._get_channels()
+        self.patch_factors = self._get_patch_factors()
+        self.channels = self._get_channels()
+        print(self.patch_factors)
+        print(self.channels)
 
         modules = []
-        for i, pf in enumerate(patch_factors):
-            modules.append(nn.Conv2d(*channels[i], pf, pf, padding=1))
+        for i, pf in enumerate(self.patch_factors):
+            modules.append(nn.Conv2d(*self.channels[i], pf, pf, padding=1))
             if i > 0:
-                modules.append(nn.InstanceNorm2d(channels[i][-1]))
-            if i < len(patch_factors):
+                modules.append(nn.InstanceNorm2d(self.channels[i][-1]))
+            if i < len(self.patch_factors):
                 modules.append(nn.LeakyReLU(0.2, inplace=True))
 
-        modules.append(nn.Conv2d(channels[-1][-1], 1, 1, 1))
+        modules.append(nn.Conv2d(self.channels[-1][-1], 1, 1, 1, padding=1))
 
         self.model = nn.Sequential(*modules)
         self.sigmoid = nn.Sigmoid()
@@ -43,7 +45,7 @@ class Discriminator(nn.Module):
         return patch_factors
 
     def _get_channels(self):
-        channels = [self.n*(2**i, self.n*(2**(i+1)))
+        channels = [(self.n*2**i, self.n*2**(i+1))
                     for i, _ in enumerate(self.patch_factors)]
         channels[0] = (3, self.n*2)
 
