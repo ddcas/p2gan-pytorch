@@ -1,3 +1,4 @@
+import os
 import argparse
 import logging
 
@@ -56,15 +57,19 @@ def main(args):
 
     logging.info('Setting up models...')
     vgg = VGG(device).eval()
-    generator = Generator().to(device).train()
+    generator = Generator(3, 3, 3).to(device).train()
     discriminator = Discriminator(patch_size).to(device).train()
 
     logging.info('Setting up optimizers...')
     optim_g = optim.RMSprop(generator.parameters(), lr=learning_rate)
     optim_d = optim.RMSprop(discriminator.parameters(), lr=learning_rate)
 
-    logging.info('Setting up losses criteria...')
+    logging.info('Setting up content loss criterion...')
     content_criterion = nn.MSELoss()
+
+    # create folder for periodically saving image samples
+    if not os.path.isdir('./samples'):
+        os.mkdir('./samples')
 
     losses_adv, losses_content = [], []
     logging.info('Training starts!')

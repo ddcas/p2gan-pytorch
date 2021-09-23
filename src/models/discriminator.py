@@ -2,6 +2,7 @@
 Discriminator module as described in https://arxiv.org/abs/2001.07466
 """
 
+import torch
 import torch.nn as nn
 
 
@@ -10,6 +11,7 @@ class Discriminator(nn.Module):
     This module is subject to the rules:
     a) kernel_size = stride for each layer
     b) kernel_size is a factor of patch_size
+
     Parameters
     ----------
     patch_size : int
@@ -17,7 +19,7 @@ class Discriminator(nn.Module):
     ch_mult : int
         The channel multiplier that will define the depth of the conv layers
     """
-    def __init__(self, patch_size, ch_mult=128):
+    def __init__(self, patch_size: int, ch_mult: int = 128):
         super().__init__()
 
         self.patch_size = patch_size
@@ -37,13 +39,13 @@ class Discriminator(nn.Module):
         self.model = nn.Sequential(*modules)
         self.sigmoid = nn.Sigmoid()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.model(x)
         x = self.sigmoid(x)
 
         return x.mean((-2, -1)).squeeze()
 
-    def _get_patch_factors(self):
+    def _get_patch_factors(self) -> list:
         """
         Obtain all factors of the patch size except the number 1 and itself
         """
@@ -55,7 +57,7 @@ class Discriminator(nn.Module):
 
         return patch_factors
 
-    def _get_channels(self):
+    def _get_channels(self) -> list:
         """
         Obtain channel pairs for each of the convolutional layers of the network
         """

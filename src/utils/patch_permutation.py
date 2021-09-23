@@ -6,6 +6,15 @@ import numpy as np
 def extract_patches(img: Image, patch_size: int, num_patches: int) -> list:
     """
     Break an image into randomly extracted patches.
+
+    Parameters
+    ----------
+    img: Image
+        The image that will serve as style source
+    patch_size: int
+        The size of the patches extracted during the patch permutation
+    num_patches: int
+        The number of patches per height/width of the resulting style image
     """
     # set extraction limits
     img_size = img.size
@@ -28,6 +37,13 @@ def extract_patches(img: Image, patch_size: int, num_patches: int) -> list:
 def build_image(patches: list, patches_per_side: int) -> Image:
     """
     Build an image from a list of patches.
+
+    Parameters
+    ----------
+    patches: list
+        The extracted patches that will conform the new style images
+    patches_per_side: int
+        The number of patches per height/width of the resulting style image
     """
     # create destination image
     patch_size = patches[0].size[0]
@@ -51,6 +67,17 @@ def patch_permutation(
         num_images: int) -> list:
     """
     Perform patch-permutation as described in https://arxiv.org/abs/2001.07466
+
+    Parameters
+    ----------
+    src_img_path: str
+        The location of the image that will serve as style source
+    patch_size: int
+        The size of the patches extracted during the patch permutation
+    patches_per_side: int
+        The number of patches per height/width of the resulting style image
+    num_images : int
+        The number of images that will conform the style dataset
     """
     src_img = Image.open(src_img_path)
     images = []
