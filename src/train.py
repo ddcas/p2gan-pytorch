@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from torch.utils.data import Dataset, DataLoader, ConcatDataset
+from torch.utils.data import DataLoader
 import torch.optim as optim
 import torch.nn as nn
 from torchvision.utils import save_image
@@ -30,6 +30,7 @@ def main(args):
 
     logging.info('Checking for CUDA devices...')
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    logging.info(f'Training on {device}')
 
     logging.info('Manually set random seed for reproducibility')
     torch.manual_seed(random_seed)
@@ -53,16 +54,16 @@ def main(args):
                      batch_size*len(dataloader_content), style_transforms),
         batch_size=batch_size, num_workers=0, shuffle=True)
 
-    logging.info('Set up models...')
+    logging.info('Setting up models...')
     vgg = VGG(device).eval()
     generator = Generator().to(device).train()
     discriminator = Discriminator(patch_size).to(device).train()
 
-    logging.info('Set up optimizers...')
+    logging.info('Setting up optimizers...')
     optim_g = optim.RMSprop(generator.parameters(), lr=learning_rate)
     optim_d = optim.RMSprop(discriminator.parameters(), lr=learning_rate)
 
-    logging.info('Set up losses criteria...')
+    logging.info('Setting up losses criteria...')
     content_criterion = nn.MSELoss()
     adv_criterion = nn.BCELoss()
 
