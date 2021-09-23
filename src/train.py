@@ -65,7 +65,6 @@ def main(args):
 
     logging.info('Setting up losses criteria...')
     content_criterion = nn.MSELoss()
-    adv_criterion = nn.BCELoss()
 
     losses_adv, losses_content = [], []
     logging.info('Training starts!')
@@ -81,7 +80,8 @@ def main(args):
 
             # calculate losses
             loss_content = content_criterion(phi_g_x, phi_x)
-            loss_adv = adv_criterion(dp_g_x, dp_psi.detach())
+            loss_adv = -(torch.mean(torch.log(dp_psi))
+                         + torch.mean(torch.log(1 - dp_g_x)))
             losses_content.append(loss_content.item())
             losses_adv.append(loss_adv.item())
             loss_minmax = loss_adv + content_weight * loss_content
